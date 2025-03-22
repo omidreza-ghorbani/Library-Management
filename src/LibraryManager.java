@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class LibraryManager {
-    final static private HashMap<String, Library> libraries = new HashMap<>();
+    final static HashMap<String, Library> libraries = new HashMap<>();
     static public void addLibrary(String data) {
         String[] details = data.split("\\|");
         String id = details[0];

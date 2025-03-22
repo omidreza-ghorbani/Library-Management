@@ -13,9 +13,11 @@ public class CategoryManager {
         if (categories.containsKey(id)) {
             System.out.print(Main.DUPLICATE);
             return;}
+
         if (!parentCategoryId.equals("null") && !categories.containsKey(parentCategoryId)) {
             System.out.print(Main.NOT_FOUND);
             return;}
+
         Category category = new Category(adminName, adminPassword, id, categoryName, parentCategoryId);
         categories.put(id, category);
         System.out.print(Main.SUCCESS);
