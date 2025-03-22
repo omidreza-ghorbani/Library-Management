@@ -11,10 +11,10 @@ public class LibraryManager {
         String address = details[4];
 
         if (libraries.containsKey(id)) {
-            System.out.print(Main.DUPLICATE_STR);
+            System.out.print(Main.DUPLICATE);
             return;}
         Library library = new Library(id, name, date, desk_number, address);
         libraries.put(id, library);
-        System.out.print(Main.SUCCESS_STR);
+        System.out.print(Main.SUCCESS);
     }
 }
