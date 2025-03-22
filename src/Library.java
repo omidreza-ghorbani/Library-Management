@@ -11,6 +11,5 @@ public class Library {
         this.date = date;
         this.address = address;
         this.deskNumber = deskNumber;
-        System.out.print(Main.SUCCESS);
     }
 }

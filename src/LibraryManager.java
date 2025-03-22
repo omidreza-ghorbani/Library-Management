@@ -13,21 +13,20 @@ public class LibraryManager {
         String address = details[6];
 
         if(!User.userExists(adminName)) {
-            System.out.println(Main.NOT_FOUND);}
+            System.out.print(Main.NOT_FOUND);return;}
 
         if (!adminName.equals(Main.ADMIN_STR)) {
-           System.out.println(Main.PERMISSION);}
+           System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
-            System.out.println(Main.INVALID_PASS);}
+            System.out.print(Main.INVALID_PASS);return;}
 
         if (libraries.containsKey(id)) {
-            System.out.print(Main.DUPLICATE);
-            return;}
+            System.out.print(Main.DUPLICATE);return;}
 
         Library library = new Library(id, name, date, desk_number, address);
         libraries.put(id, library);
 
-        System.out.print(Main.SUCCESS);
+        System.out.print(Main.SUCCESS);return;
     }
 }

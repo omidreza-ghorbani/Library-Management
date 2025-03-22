@@ -32,16 +32,16 @@ abstract public class User {
         String address = detail[8];
 
         if (!userExists(adminName)) {
-            System.out.println(Main.NOT_FOUND);}
+            System.out.print(Main.NOT_FOUND);return;}
 
-        if (adminName.equals(Main.ADMIN_STR)) {
-            System.out.println(Main.PERMISSION);}
+        if (!adminName.equals(Main.ADMIN_STR)) {
+            System.out.print(Main.PERMISSION);return;}
 
         if (!checkPassword(adminName, adminPassword)) {
-            System.out.println(Main.INVALID_PASS);}
+            System.out.print(Main.INVALID_PASS);return;}
 
         if (userExists(id)) {
-            System.out.println(Main.DUPLICATE);}
+            System.out.print(Main.DUPLICATE);return;}
 
         if (type.equals("student")) {
             User user = new Student(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
@@ -56,12 +56,12 @@ abstract public class User {
             }
         } else if (type.equals("manager")) {
             if (!LibraryManager.libraries.containsKey(detail[9])) {
-                System.out.println(Main.NOT_FOUND);
+                System.out.print(Main.NOT_FOUND);return;
             }
             User manager = new Manager(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8],detail[9]);
             users.put(id, manager);
         }
-        System.out.println(Main.SUCCESS);
+        System.out.print(Main.SUCCESS);return;
     }
 
     public static boolean userExists(String key) {
@@ -77,20 +77,20 @@ abstract public class User {
         String id = detail[2];
 
         if (!userExists(adminName)) {
-           System.out.println(Main.NOT_FOUND);}
+           System.out.print(Main.NOT_FOUND);return;}
 
         if (!adminName.equals(Main.ADMIN_STR)) {
-            System.out.println(Main.PERMISSION);}
+            System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
-            System.out.println(Main.INVALID_PASS);}
+            System.out.print(Main.INVALID_PASS);return;}
 
         if (!userExists(id)) {
-            System.out.println(Main.NOT_FOUND);}
+            System.out.print(Main.NOT_FOUND);return;}
 
         users.remove(id);
 
-        System.out.println(Main.SUCCESS);
+        System.out.print(Main.SUCCESS);return;
     }
 }
 

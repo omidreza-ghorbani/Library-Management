@@ -11,6 +11,5 @@ public class Category {
         this.id = id;
         this.categoryName = categoryName;
         this.parentsCategory = parentsCategory;
-        System.out.print(Main.SUCCESS);
     }
 }

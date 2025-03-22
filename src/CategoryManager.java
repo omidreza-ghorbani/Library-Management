@@ -11,17 +11,16 @@ public class CategoryManager {
         String parentCategoryId = details[4];
 
         if (!User.userExists(adminName)) {
-            System.out.println(Main.NOT_FOUND);}
+            System.out.print(Main.NOT_FOUND);return;}
 
         if (!adminName.equals(Main.ADMIN_STR)) {
-            System.out.println(Main.PERMISSION);}
+            System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
-            System.out.println(Main.INVALID_PASS);}
+            System.out.print(Main.INVALID_PASS);return;}
 
         if (categories.containsKey(id)) {
-            System.out.print(Main.DUPLICATE);
-            return;}
+            System.out.print(Main.DUPLICATE);return;}
 
         if (!parentCategoryId.equals("null") && !categories.containsKey(parentCategoryId)) {
             System.out.print(Main.NOT_FOUND);
@@ -29,6 +28,6 @@ public class CategoryManager {
 
         Category category = new Category(adminName, adminPassword, id, categoryName, parentCategoryId);
         categories.put(id, category);
-        System.out.print(Main.SUCCESS);
+        System.out.print(Main.SUCCESS);return;
     }
 }
