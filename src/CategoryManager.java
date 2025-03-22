@@ -1,7 +1,7 @@
 import java.util.HashMap;
-
 public class CategoryManager {
     final static private HashMap<String, Category> categories = new HashMap<>();
+
     static public void addCategory(String data) {
         String[] details = data.split("\\|");
         String adminName = details[0];

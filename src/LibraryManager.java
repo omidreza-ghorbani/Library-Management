@@ -1,5 +1,4 @@
 import java.util.HashMap;
-
 public class LibraryManager {
     final static HashMap<String, Library> libraries = new HashMap<>();
 

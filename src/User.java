@@ -1,5 +1,4 @@
 import java.util.HashMap;
-
 abstract public class User {
     private String id;
     private String password;
@@ -32,22 +31,17 @@ abstract public class User {
         String birthDate = detail[7];
         String address = detail[8];
 
-
         if (!userExists(adminName)) {
-            System.out.println(Main.NOT_FOUND);
-        }
+            System.out.println(Main.NOT_FOUND);}
 
         if (adminName.equals(Main.ADMIN_STR)) {
-            System.out.println(Main.PERMISSION);
-        }
+            System.out.println(Main.PERMISSION);}
 
         if (!checkPassword(adminName, adminPassword)) {
-            System.out.println(Main.INVALID_PASS);
-        }
+            System.out.println(Main.INVALID_PASS);}
 
         if (userExists(id)) {
-            System.out.println(Main.DUPLICATE);
-        }
+            System.out.println(Main.DUPLICATE);}
 
         if (type.equals("student")) {
             User user = new Student(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
@@ -60,7 +54,6 @@ abstract public class User {
                 User professor = new Professor(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
                 users.put(id, professor);
             }
-
         } else if (type.equals("manager")) {
             if (!LibraryManager.libraries.containsKey(detail[9])) {
                 System.out.println(Main.NOT_FOUND);
@@ -72,12 +65,10 @@ abstract public class User {
     }
 
     public static boolean userExists(String key) {
-        return users.containsKey(key);
-    }
+        return users.containsKey(key);}
 
     public static boolean checkPassword(String name, String password) {
-        return users.get(name).password.equals(password);
-    }
+        return users.get(name).password.equals(password);}
 
     public static void removeUser(String data) {
         String[] detail = data.split("\\|");
