@@ -5,9 +5,9 @@ public class Category {
     private String categoryName;
     private String parentsCategory;
 
-    public Category(String adminName2, String adminPassword2, String id, String categoryName, String parentsCategory) {
-        this.adminName = adminName2;
-        this.adminPassword = adminPassword2;
+    public Category(String adminName, String adminPassword, String id, String categoryName, String parentsCategory) {
+        this.adminName = adminName;
+        this.adminPassword = adminPassword;
         this.id = id;
         this.categoryName = categoryName;
         this.parentsCategory = parentsCategory;
