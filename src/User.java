@@ -8,7 +8,7 @@ abstract public class User {
     private String nationalCode;
     private String birthDate;
     private String address;
-    final static private HashMap<String, User> users = new HashMap<>();
+    final static HashMap<String, User> users = new HashMap<>();
 
     public User(String id, String password, String firstName, String lastName, String nationalCode, String birthDate, String address) {
         this.id = id;
@@ -32,7 +32,8 @@ abstract public class User {
         String birthDate = detail[7];
         String address = detail[8];
 
-        if (!adminName.equals(Main.ADMIN_STR)) {
+
+        if (!userExists(adminName)) {
             System.out.println(Main.NOT_FOUND);
         }
 
@@ -40,7 +41,7 @@ abstract public class User {
             System.out.println(Main.PERMISSION);
         }
 
-        if (!adminPassword.equals(Main.ADMIN_PASS)) {
+        if (!checkPassword(adminName, adminPassword)) {
             System.out.println(Main.INVALID_PASS);
         }
 
@@ -52,20 +53,53 @@ abstract public class User {
             User user = new Student(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
             users.put(id, user);
         } else if (type.equals("staff")) {
-            User user = new Staff(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
-            users.put(id, user);
+            if(detail[9].equals("staff")){
+                User staff = new Staff(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
+                users.put(id, staff);
+            }else {
+                User professor = new Professor(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
+                users.put(id, professor);
+            }
+
         } else if (type.equals("manager")) {
             if (!LibraryManager.libraries.containsKey(detail[9])) {
                 System.out.println(Main.NOT_FOUND);
             }
-            User user = new Manager(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8],detail[9]);
-            users.put(id, user);
+            User manager = new Manager(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8],detail[9]);
+            users.put(id, manager);
         }
         System.out.println(Main.SUCCESS);
     }
 
     public static boolean userExists(String key) {
         return users.containsKey(key);
+    }
+
+    public static boolean checkPassword(String name, String password) {
+        return users.get(name).password.equals(password);
+    }
+
+    public static void removeUser(String data) {
+        String[] detail = data.split("\\|");
+        String adminName = detail[0];
+        String adminPassword = detail[1];
+        String id = detail[2];
+
+        if (!userExists(adminName)) {
+           System.out.println(Main.NOT_FOUND);}
+
+        if (!adminName.equals(Main.ADMIN_STR)) {
+            System.out.println(Main.PERMISSION);}
+
+        if (!User.checkPassword(adminName, adminPassword)) {
+            System.out.println(Main.INVALID_PASS);}
+
+        if (!userExists(id)) {
+            System.out.println(Main.NOT_FOUND);}
+
+        users.remove(id);
+
+        System.out.println(Main.SUCCESS);
     }
 }
 

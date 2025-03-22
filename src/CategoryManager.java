@@ -10,6 +10,15 @@ public class CategoryManager {
         String categoryName = details[3];
         String parentCategoryId = details[4];
 
+        if (!User.userExists(adminName)) {
+            System.out.println(Main.NOT_FOUND);}
+
+        if (!adminName.equals(Main.ADMIN_STR)) {
+            System.out.println(Main.PERMISSION);}
+
+        if (!User.checkPassword(adminName, adminPassword)) {
+            System.out.println(Main.INVALID_PASS);}
+
         if (categories.containsKey(id)) {
             System.out.print(Main.DUPLICATE);
             return;}

@@ -11,6 +11,8 @@ public class Main {
     static final String INVALID_PASS = "permission-denied\n";
 
     public static void main(String[] args) {
+        User admin = new Admin("admin","AdminPass");
+        User.users.put("admin",admin);
         boolean toContinue = true;
         while(toContinue) {
             toContinue = Input.input();}
