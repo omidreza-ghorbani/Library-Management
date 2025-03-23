@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 public class Resource {
     private String id;
     private String name;
@@ -17,7 +18,7 @@ public class Resource {
         this.library = library;
     }
 
-    static void addBook(String data, String type) {
+    static void addResource(String data, String type) {
         String[] detail = data.split("\\|");
         String adminName = detail[0];
         String adminPassword = detail[1];
@@ -25,13 +26,26 @@ public class Resource {
         String title = detail[3];
         String author = detail[4];
         String datePublication = detail[6];
-        String category = detail[8];
-        String library = detail[9];
+        String category;
+        String library;
+        if(type.equals("treasureTrove")) {
+            category = detail[8];
+            library = detail[9];
+        }else if(type.equals("forSale")) {
+            category = detail[10];
+            library = detail[11];
+        }else if(type.equals("book")) {
+            category = detail[8];
+            library = detail[9];
+        }else{
+            category = detail[7];
+            library = detail[8];
+        }
 
         if (!User.userExists(adminName)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-        if (!CategoryManager.categories.containsKey(id)) {
+        if (!CategoryManager.categories.containsKey(category)) {
             System.out.print(Main.NOT_FOUND);return;}
 
         if (!LibraryManager.libraries.containsKey(library)) {
@@ -81,7 +95,7 @@ public class Resource {
             System.out.print(Main.PERMISSION);return;}
 
         if (!resourceExists(id, library)) {
-            System.out.print(Main.DUPLICATE);return;}
+            System.out.print(Main.NOT_FOUND);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
@@ -112,9 +126,11 @@ public class Resource {
     }
 
     static void removeHelper(String id, String library) {
-        for (Resource resource : resources.values()) {
+        Iterator<Resource> iterator = resources.values().iterator();
+        while (iterator.hasNext()) {
+            Resource resource = iterator.next();
             if (resource.id.equals(id) && resource.library.equals(library)) {
-                resources.remove(id);
+                iterator.remove();
             }
         }
     }
