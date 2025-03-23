@@ -45,13 +45,16 @@ public class Resource {
         if (!User.userExists(adminName)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-        if (!CategoryManager.categories.containsKey(category)) {
+        if (!CategoryManager.categories.containsKey(category) && !category.equals("null")) {
             System.out.print(Main.NOT_FOUND);return;}
 
         if (!LibraryManager.libraries.containsKey(library)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-        if (!(User.users.get(adminName) instanceof Manager) || !managerInLibrary(adminName, library)) {
+        if (!(User.users.get(adminName) instanceof Manager)) {
+            System.out.print(Main.PERMISSION);return;}
+
+        if (!managerInLibrary(adminName, library)) {
             System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
@@ -74,9 +77,8 @@ public class Resource {
             resources.put(id, treasureTrove);
         }
 
-        System.out.println(Main.SUCCESS);
+        System.out.print(Main.SUCCESS);
     }
-
 
     static void removeResource(String data) {
         String[] detail = data.split("\\|");
@@ -85,23 +87,30 @@ public class Resource {
         String id = detail[2];
         String library = detail[3];
 
-        if (!LibraryManager.libraries.containsKey(library)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
         if (!User.userExists(adminName)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-        if (!(User.users.get(adminName) instanceof Manager) || !managerInLibrary(adminName, library)) {
+
+
+        if (!LibraryManager.libraries.containsKey(library)) {
+            System.out.print(Main.NOT_FOUND);return;}
+
+        if (!managerInLibrary(adminName, library)) {
             System.out.print(Main.PERMISSION);return;}
 
-        if (!resourceExists(id, library)) {
-            System.out.print(Main.NOT_FOUND);return;}
+        if (!(User.users.get(adminName) instanceof Manager)) {
+            System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
 
+        if (!resourceExists(id, library)) {
+            System.out.print(Main.NOT_FOUND);return;}
+
+
+
         removeHelper(id, library);
-        System.out.println(Main.SUCCESS);
+        System.out.print(Main.SUCCESS);
     }
 
     static boolean resourceExists(String id, String library) {
@@ -114,16 +123,14 @@ public class Resource {
     }
 
     static boolean managerInLibrary(String id, String library) {
-        for (User user : User.users.values()) {
-            if (User.users.get(id) instanceof Manager && user.getId().equals(id)) {
-                Manager manager = (Manager) User.users.get(id);
-                if(manager.getLibraryId().equals(library)){
-                    return true;
-                }
-            }
+        User user = User.users.get(id);
+        if (user instanceof Manager) {
+            Manager manager = (Manager) user;
+            return manager.getLibraryId().equals(library);
         }
         return false;
     }
+
 
     static void removeHelper(String id, String library) {
         Iterator<Resource> iterator = resources.values().iterator();
