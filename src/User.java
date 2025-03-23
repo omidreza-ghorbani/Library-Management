@@ -89,15 +89,14 @@ abstract public class User {
         if (!userExists(adminName)) {
            System.out.print(Main.NOT_FOUND);return;}
 
-        if (!userExists(id)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
         if (!adminName.equals(Main.ADMIN_STR)) {
             System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
 
+        if (!userExists(id)) {
+            System.out.print(Main.NOT_FOUND);return;}
 
         users.remove(id);
 

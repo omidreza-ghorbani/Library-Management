@@ -51,6 +51,7 @@ public class Resource {
         if (!LibraryManager.libraries.containsKey(library)) {
             System.out.print(Main.NOT_FOUND);return;}
 
+
         if (!(User.users.get(adminName) instanceof Manager)) {
             System.out.print(Main.PERMISSION);return;}
 
@@ -90,8 +91,6 @@ public class Resource {
         if (!User.userExists(adminName)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-
-
         if (!LibraryManager.libraries.containsKey(library)) {
             System.out.print(Main.NOT_FOUND);return;}
 
@@ -101,13 +100,11 @@ public class Resource {
         if (!(User.users.get(adminName) instanceof Manager)) {
             System.out.print(Main.PERMISSION);return;}
 
-        if (!User.checkPassword(adminName, adminPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
-
         if (!resourceExists(id, library)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-
+        if (!User.checkPassword(adminName, adminPassword)) {
+            System.out.print(Main.INVALID_PASS);return;}
 
         removeHelper(id, library);
         System.out.print(Main.SUCCESS);
