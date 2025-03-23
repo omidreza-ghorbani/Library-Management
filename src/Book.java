@@ -1,5 +1,9 @@
 public class Book extends Resource {
-    public Book(String id, String name, String author, String datePublication, String category, String library) {
+    private String publisher;
+    private int copy;
+    public Book(String id, String name, String author, String publisher, String datePublication, int copy, String category, String library) {
         super(id, name, author, datePublication, category, library);
+        this.publisher = publisher;
+        this.copy = copy;
     }
 }

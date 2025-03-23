@@ -4,4 +4,5 @@ public class Manager extends User {
         super(id, password, firstName, lastName, nationalCode, birthDate, address);
         this.libraryId = libraryId;
     }
+    public String getLibraryId() {return libraryId;}
 }

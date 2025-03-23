@@ -19,6 +19,8 @@ abstract public class User {
         this.address = address;
     }
 
+    public String getId() {return id;}
+
     static void addUser(String data, String type) {
         String[] detail = data.split("\\|");
         String adminName = detail[0];

@@ -1,5 +1,4 @@
 import java.util.HashMap;
-
 public class Resource {
     private String id;
     private String name;
@@ -22,7 +21,8 @@ public class Resource {
         String[] detail = data.split("\\|");
         String adminName = detail[0];
         String adminPassword = detail[1];
-        String id = detail[3];
+        String id = detail[2];
+        String title = detail[3];
         String author = detail[4];
         String datePublication = detail[6];
         String category = detail[8];
@@ -37,22 +37,85 @@ public class Resource {
         if (!LibraryManager.libraries.containsKey(library)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-        if (!adminName.equals(Main.ADMIN_STR)) {
+        if (!(User.users.get(adminName) instanceof Manager) || !managerInLibrary(adminName, library)) {
             System.out.print(Main.PERMISSION);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
 
-        if (resourceExists(id)) {
+        if (resourceExists(id, library)) {
             System.out.print(Main.DUPLICATE);return;}
 
-
-
+        if (type.equals("book")) {
+            Resource book = new Book(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]),category,library);
+            resources.put(id, book);
+        }else if (type.equals("forSale")) {
+            Resource forSale = new BookForSale(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]) ,detail[8], detail[9], category, library);
+            resources.put(id, forSale);
+        } else if (type.equals("thesis")) {
+            Resource thesis = new Thesis(id, title, author, detail[5], datePublication, category, library);
+            resources.put(id, thesis);
+        } else if (type.equals("treasureTrove")) {
+            Resource treasureTrove = new TreasureTrove(id, title, author, detail[5], datePublication, detail[7], category, library);
+            resources.put(id, treasureTrove);
+        }
 
         System.out.println(Main.SUCCESS);
     }
 
-    static boolean resourceExists(String id) {
-        return resources.containsKey(id);
+
+    static void removeResource(String data) {
+        String[] detail = data.split("\\|");
+        String adminName = detail[0];
+        String adminPassword = detail[1];
+        String id = detail[2];
+        String library = detail[3];
+
+        if (!LibraryManager.libraries.containsKey(library)) {
+            System.out.print(Main.NOT_FOUND);return;}
+
+        if (!User.userExists(adminName)) {
+            System.out.print(Main.NOT_FOUND);return;}
+
+        if (!(User.users.get(adminName) instanceof Manager) || !managerInLibrary(adminName, library)) {
+            System.out.print(Main.PERMISSION);return;}
+
+        if (!resourceExists(id, library)) {
+            System.out.print(Main.DUPLICATE);return;}
+
+        if (!User.checkPassword(adminName, adminPassword)) {
+            System.out.print(Main.INVALID_PASS);return;}
+
+        removeHelper(id, library);
+        System.out.println(Main.SUCCESS);
+    }
+
+    static boolean resourceExists(String id, String library) {
+        for (Resource resource : resources.values()) {
+            if (resource.id.equals(id) && resource.library.equals(library)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static boolean managerInLibrary(String id, String library) {
+        for (User user : User.users.values()) {
+            if (User.users.get(id) instanceof Manager && user.getId().equals(id)) {
+                Manager manager = (Manager) User.users.get(id);
+                if(manager.getLibraryId().equals(library)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    static void removeHelper(String id, String library) {
+        for (Resource resource : resources.values()) {
+            if (resource.id.equals(id) && resource.library.equals(library)) {
+                resources.remove(id);
+            }
+        }
     }
 }
