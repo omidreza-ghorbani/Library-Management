@@ -13,6 +13,9 @@ public class Input {
                 User.addUser(tokens[1], "staff"); yield true;}
             case "add-manager" -> {
                 User.addUser(tokens[1], "manager"); yield true;}
+            case "remove-user" -> {
+                User.removeUser(tokens[1]); yield true;
+            }
             default -> false;};
     }
 }
