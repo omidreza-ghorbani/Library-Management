@@ -7,6 +7,7 @@ abstract public class User {
     private String nationalCode;
     private String birthDate;
     private String address;
+    private int resourceNumber;
     final static HashMap<String, User> users = new HashMap<>();
 
     public User(String id, String password, String firstName, String lastName, String nationalCode, String birthDate, String address) {
@@ -17,6 +18,7 @@ abstract public class User {
         this.nationalCode = nationalCode;
         this.birthDate = birthDate;
         this.address = address;
+        this.resourceNumber = 0;
     }
 
     public String getId() {return id;}
@@ -87,7 +89,7 @@ abstract public class User {
         String id = detail[2];
 
         if (!userExists(adminName)) {
-           System.out.print(Main.NOT_FOUND);return;}
+            System.out.print(Main.NOT_FOUND);return;}
 
         if (!adminName.equals(Main.ADMIN_STR)) {
             System.out.print(Main.PERMISSION);return;}
@@ -103,4 +105,3 @@ abstract public class User {
         System.out.print(Main.SUCCESS);return;
     }
 }
-

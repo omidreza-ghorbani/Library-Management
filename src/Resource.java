@@ -7,8 +7,7 @@ public class Resource {
     private String datePublication;
     private String category;
     private String library;
-    final static HashMap<String, Resource> resources = new HashMap<String, Resource>();
-
+    final static HashMap<String, Resource> resources = new HashMap<>( );
     public Resource(String id, String name, String author, String datePublication, String category, String library) {
         this.id = id;
         this.name = name;
@@ -17,6 +16,8 @@ public class Resource {
         this.category = category;
         this.library = library;
     }
+
+    public String getId() {return id;}
 
     static void addResource(String data, String type) {
         String[] detail = data.split("\\|");
@@ -31,13 +32,13 @@ public class Resource {
         if(type.equals("treasureTrove")) {
             category = detail[8];
             library = detail[9];
-        }else if(type.equals("forSale")) {
+        } else if(type.equals("forSale")) {
             category = detail[10];
             library = detail[11];
-        }else if(type.equals("book")) {
+        } else if(type.equals("book")) {
             category = detail[8];
             library = detail[9];
-        }else{
+        } else {
             category = detail[7];
             library = detail[8];
         }
@@ -51,7 +52,6 @@ public class Resource {
         if (!LibraryManager.libraries.containsKey(library)) {
             System.out.print(Main.NOT_FOUND);return;}
 
-
         if (!(User.users.get(adminName) instanceof Manager)) {
             System.out.print(Main.PERMISSION);return;}
 
@@ -61,25 +61,28 @@ public class Resource {
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
 
-        if (resourceExists(library, id)) {
-            System.out.print(Main.DUPLICATE);return;
-        }
+        if (resourceExists(library,id)) {
+            System.out.print(Main.DUPLICATE);return;}
 
+        Resource newResource = null;
         if (type.equals("book")) {
-            Resource book = new Book(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]),category,library);
-            resources.put(id, book);
-        }else if (type.equals("forSale")) {
-            Resource forSale = new BookForSale(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]) ,detail[8], detail[9], category, library);
-            resources.put(id, forSale);
+            newResource = new Book(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]), category, library);
+        } else if (type.equals("forSale")) {
+            newResource = new BookForSale(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]), detail[8], detail[9], category, library);
         } else if (type.equals("thesis")) {
-            Resource thesis = new Thesis(id, title, author, detail[5], datePublication, category, library);
-            resources.put(id, thesis);
+            newResource = new Thesis(id, title, author, detail[5], datePublication, category, library);
         } else if (type.equals("treasureTrove")) {
-            Resource treasureTrove = new TreasureTrove(id, title, author, detail[5], datePublication, detail[7], category, library);
-            resources.put(id, treasureTrove);
+            newResource = new TreasureTrove(id, title, author, detail[5], datePublication, detail[7], category, library);
         }
 
+        String key = getCompositeKey(library, id);
+        resources.put(key, newResource);
         System.out.print(Main.SUCCESS);
+    }
+
+    public static boolean resourceExists(String libraryId, String bookId) {
+        String key = getCompositeKey(libraryId, bookId);
+        return resources.containsKey(key);
     }
 
     static void removeResource(String data) {
@@ -101,11 +104,8 @@ public class Resource {
         if (!(User.users.get(adminName) instanceof Manager)) {
             System.out.print(Main.PERMISSION);return;}
 
-
         if (!resourceExists(library,id)) {
-            System.out.print(Main.NOT_FOUND);
-            return;
-        }
+            System.out.print(Main.NOT_FOUND);return;}
 
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
@@ -114,14 +114,10 @@ public class Resource {
         System.out.print(Main.SUCCESS);
     }
 
-    public static boolean resourceExists(String libraryId, String resourceId) {
-        Resource resource = resources.get(resourceId);
-        if (resource == null) {
-            return false;
-        }
-        return resource.library.equals(libraryId);
+    // متدی برای تولید کلید ترکیبی:
+    public static String getCompositeKey(String libraryId, String bookId) {
+        return libraryId + "_" + bookId;
     }
-
 
     static boolean managerInLibrary(String id, String library) {
         User user = User.users.get(id);
@@ -131,7 +127,6 @@ public class Resource {
         }
         return false;
     }
-
 
     static void removeHelper(String id, String library) {
         Iterator<Resource> iterator = resources.values().iterator();
