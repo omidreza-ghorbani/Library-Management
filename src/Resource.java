@@ -61,8 +61,9 @@ public class Resource {
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
 
-        if (resourceExists(id, library)) {
-            System.out.print(Main.DUPLICATE);return;}
+        if (resourceExists(library, id)) {
+            System.out.print(Main.DUPLICATE);return;
+        }
 
         if (type.equals("book")) {
             Resource book = new Book(id, title, author, detail[5], datePublication, Integer.parseInt(detail[7]),category,library);
@@ -100,8 +101,11 @@ public class Resource {
         if (!(User.users.get(adminName) instanceof Manager)) {
             System.out.print(Main.PERMISSION);return;}
 
-        if (!resourceExists(id, library)) {
-            System.out.print(Main.NOT_FOUND);return;}
+
+        if (!resourceExists(library,id)) {
+            System.out.print(Main.NOT_FOUND);
+            return;
+        }
 
         if (!User.checkPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
@@ -110,14 +114,14 @@ public class Resource {
         System.out.print(Main.SUCCESS);
     }
 
-    static boolean resourceExists(String id, String library) {
-        for (Resource resource : resources.values()) {
-            if (resource.id.equals(id) && resource.library.equals(library)) {
-                return true;
-            }
+    public static boolean resourceExists(String libraryId, String resourceId) {
+        Resource resource = resources.get(resourceId);
+        if (resource == null) {
+            return false;
         }
-        return false;
+        return resource.library.equals(libraryId);
     }
+
 
     static boolean managerInLibrary(String id, String library) {
         User user = User.users.get(id);
