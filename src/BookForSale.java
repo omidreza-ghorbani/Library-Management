@@ -11,4 +11,5 @@ public class BookForSale extends Resource {
         Price = price;
         this.discountRate = discountRate;
     }
+    public int getCopy() {return copy;}
 }

@@ -14,19 +14,15 @@ public class LibraryManager {
 
         if(!User.userExists(adminName)) {
             System.out.print(Main.NOT_FOUND);return;}
-
         if (!adminName.equals(Main.ADMIN_STR)) {
            System.out.print(Main.PERMISSION);return;}
-
-        if (!User.checkPassword(adminName, adminPassword)) {
+        if (User.isInvalidPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
-
         if (libraries.containsKey(id)) {
             System.out.print(Main.DUPLICATE);return;}
 
         Library library = new Library(id, name, date, desk_number, address);
         libraries.put(id, library);
-
-        System.out.print(Main.SUCCESS);return;
+        System.out.print(Main.SUCCESS);
     }
 }

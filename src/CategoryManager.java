@@ -12,22 +12,17 @@ public class CategoryManager {
 
         if (!User.userExists(adminName)) {
             System.out.print(Main.NOT_FOUND);return;}
-
         if (!adminName.equals(Main.ADMIN_STR)) {
             System.out.print(Main.PERMISSION);return;}
-
-        if (!User.checkPassword(adminName, adminPassword)) {
+        if (User.isInvalidPassword(adminName, adminPassword)) {
             System.out.print(Main.INVALID_PASS);return;}
-
         if (categories.containsKey(id)) {
             System.out.print(Main.DUPLICATE);return;}
-
         if (!parentCategoryId.equals("null") && !categories.containsKey(parentCategoryId)) {
-            System.out.print(Main.NOT_FOUND);
-            return;}
+            System.out.print(Main.NOT_FOUND);return;}
 
         Category category = new Category(adminName, adminPassword, id, categoryName, parentCategoryId);
         categories.put(id, category);
-        System.out.print(Main.SUCCESS);return;
+        System.out.print(Main.SUCCESS);
     }
 }
