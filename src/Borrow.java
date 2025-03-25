@@ -4,36 +4,31 @@ public class Borrow {
 
     public static void borrow_handler(String data) {
         String[] details = data.split("\\|");
-        String userId       = details[0];
+        String userId = details[0];
         String userPassword = details[1];
-        String libraryId    = details[2];
-        String bookId       = details[3];
-        String dateBorrow   = details[4];
-        String timeBorrow   = details[5];
+        String libraryId = details[2];
+        String bookId = details[3];
+        String dateBorrow = details[4];
+        String timeBorrow = details[5];
 
-        if (!User.userExists(userId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-        if (!LibraryManager.libraries.containsKey(libraryId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-        if (!Resource.resourceExists(libraryId, bookId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-        if (User.isInvalidPassword(userId, userPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
-        if (isTreasureTrove(bookId) || isForSell(bookId)) {
-            System.out.print(Main.NOT_ALLOWED);return;}
+        if (!User.userExists(userId)) {System.out.print(Main.NOT_FOUND);return;}
+        if (!LibraryManager.libraries.containsKey(libraryId)) {System.out.print(Main.NOT_FOUND);return;}
+        if (!Resource.resourceExists(libraryId, bookId)) {System.out.print(Main.NOT_FOUND);return;}
+        if (User.isInvalidPassword(userId, userPassword)) {System.out.print(Main.INVALID_PASS);return;}
+        if (isTreasureTrove(bookId) || isForSell(bookId)) {System.out.print(Main.NOT_ALLOWED);return;}
 
         String resourceKey = Resource.getCompositeKey(libraryId, bookId);
         Resource res = Resource.resources.get(resourceKey);
+        User user = User.users.get(userId);
 
         String borrowKey = userId + "_" + libraryId + "_" + bookId;
         long userBorrowCount = borrows.keySet().stream()
                 .filter(k -> k.startsWith(userId + "_"))
                 .count();
 
-        User user = User.users.get(userId);
         if (user instanceof Student && userBorrowCount >= 3) {
             System.out.print(Main.NOT_ALLOWED); return;}
-        if (user instanceof Staff && userBorrowCount >= 5) {
+        if ((user instanceof Staff || user instanceof Manager || user instanceof Professor) && userBorrowCount >= 5) {
             System.out.print(Main.NOT_ALLOWED); return;}
 
         if (res instanceof Book book){
@@ -45,6 +40,11 @@ public class Borrow {
                 System.out.print(Main.NOT_ALLOWED);
                 return;
             }
+        }
+
+        if (user.getPenalized()) {
+            System.out.print(Main.NOT_ALLOWED);
+            return;
         }
 
         if (res instanceof BookForSale bookForSale){
@@ -74,7 +74,7 @@ public class Borrow {
             }
         }
 
-        // بررسی اینکه همین کاربر قبلاً همین منبع را قرض نگرفته باشد
+        //  همین کاربر قبلاً همین منبع را قرض نگرفته باشد
         if (borrows.containsKey(borrowKey)) {
             System.out.print(Main.NOT_ALLOWED);
             return;
@@ -83,8 +83,6 @@ public class Borrow {
         borrows.put(borrowKey, userId + "|" + dateBorrow + "|" + timeBorrow);
         System.out.print(Main.SUCCESS);
     }
-
-
 
     public static boolean isTreasureTrove(String id) {
         for (Resource resource : Resource.resources.values()) {

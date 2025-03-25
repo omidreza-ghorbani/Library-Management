@@ -14,6 +14,10 @@ public class Input {
             case "add-ganjineh-book" -> {Resource.addResource(tokens[1], "treasureTrove"); yield true;}
             case "add-selling-book" -> {Resource.addResource(tokens[1], "forSale"); yield true;}
             case "remove-resource" -> {Resource.removeResource(tokens[1]); yield true;}
+            case "borrow" -> {Borrow.borrow_handler(tokens[1]); yield true;}
+            case "return" -> {Return.returnHandler(tokens[1]);yield true;}
+            case "buy" -> {Buy.buyHandler(tokens[1]);yield true;}
+            case "read" -> {ReadTreasure.readHandler(tokens[1]);yield true;}
             default -> false;};
     }
 }

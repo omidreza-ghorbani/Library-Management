@@ -7,7 +7,17 @@ abstract public class User {
     private final String nationalCode;
     private final String birthDate;
     private final String address;
+    private boolean penalized = false;
     final static HashMap<String, User> users = new HashMap<>();
+
+
+    public boolean getPenalized() {
+        return penalized;
+    }
+
+    public void setPenalized(boolean penalized) {
+        this.penalized = penalized;
+    }
 
     public User(String id, String password, String firstName, String lastName, String nationalCode, String birthDate, String address) {
         this.id = id;
@@ -31,18 +41,14 @@ abstract public class User {
         String birthDate = detail[7];
         String address = detail[8];
         String library = "null";
+
         if (type.equals("manager")) {library = detail[9];}
 
-        if (!userExists(adminName)) {
-            System.out.print(Main.NOT_FOUND);return;}
-        if(!LibraryManager.libraries.containsKey(library) && !library.equals("null")) {
-            System.out.print(Main.NOT_FOUND);return;}
-        if (!adminName.equals(Main.ADMIN_STR)) {
-            System.out.print(Main.PERMISSION);return;}
-        if (isInvalidPassword(adminName, adminPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
-        if (userExists(id)) {
-            System.out.print(Main.DUPLICATE);return;}
+        if (!userExists(adminName)) {System.out.print(Main.NOT_FOUND);return;}
+        if(!LibraryManager.libraries.containsKey(library) && !library.equals("null")) {System.out.print(Main.NOT_FOUND);return;}
+        if (!adminName.equals(Main.ADMIN_STR)) {System.out.print(Main.PERMISSION);return;}
+        if (isInvalidPassword(adminName, adminPassword)) {System.out.print(Main.INVALID_PASS);return;}
+        if (userExists(id)) {System.out.print(Main.DUPLICATE);return;}
 
         if (type.equals("student")) {
             User user = new Student(detail[2],detail[3],detail[4],detail[5],detail[6],detail[7],detail[8]);
@@ -62,28 +68,27 @@ abstract public class User {
         }System.out.print(Main.SUCCESS);
     }
 
-    public static boolean userExists(String key) {
-        return users.containsKey(key);}
-
-    public static boolean isInvalidPassword(String name, String password) {
-        return !users.get(name).password.equals(password);}
-
     public static void removeUser(String data) {
         String[] detail = data.split("\\|");
         String adminName = detail[0];
         String adminPassword = detail[1];
         String id = detail[2];
 
-        if (!userExists(adminName)) {
-            System.out.print(Main.NOT_FOUND);return;}
-        if (!adminName.equals(Main.ADMIN_STR)) {
-            System.out.print(Main.PERMISSION);return;}
-        if (User.isInvalidPassword(adminName, adminPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
-        if (!userExists(id)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
+        if (!userExists(adminName)) {System.out.print(Main.NOT_FOUND);return;}
+        if (!adminName.equals(Main.ADMIN_STR)) {System.out.print(Main.PERMISSION);return;}
+        if (User.isInvalidPassword(adminName, adminPassword)) {System.out.print(Main.INVALID_PASS);return;}
+        if (!userExists(id)) {System.out.print(Main.NOT_FOUND);return;}
+        if (User.users.get(id).getPenalized()) {
+            System.out.print(Main.NOT_ALLOWED);
+            return;
+        }
         users.remove(id);
         System.out.print(Main.SUCCESS);
     }
+
+    public static boolean userExists(String key) {
+        return users.containsKey(key);}
+
+    public static boolean isInvalidPassword(String name, String password) {
+        return !users.get(name).password.equals(password);}
 }

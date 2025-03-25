@@ -4,6 +4,5 @@ public class TreasureTrove extends Resource {
     public TreasureTrove(String id, String name, String author, String publisher, String datePublication, String bookDonor, String category, String library) {
         super(id, name, author, datePublication, category, library);
         this.publisher = publisher;
-        this.bookDonor = bookDonor;
-    }
+        this.bookDonor = bookDonor;}
 }
