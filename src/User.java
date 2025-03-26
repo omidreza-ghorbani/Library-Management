@@ -16,6 +16,9 @@ abstract class User {
         return penalized;
     }
 
+    public String getFirstName() {return firstName;}
+    public String getLastName() {return lastName;}
+
     public void setPenalized(boolean penalized) {
         this.penalized = penalized;
     }

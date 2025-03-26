@@ -15,6 +15,8 @@ class Resource {
         this.category = category;
         this.library = library;}
     public String getId() {return id;}
+    public String getName() {return name;}
+    public String getAuthor() {return author;}
 
     static void addResource(String data, String type) {
         String[] detail = data.split("\\|");
@@ -70,7 +72,6 @@ class Resource {
                 newResource = new TreasureTrove(id, title, author, detail[5], datePublication, detail[7], category, library);
                 break;
         }
-        System.err.println("DEBUG borrows keys=" + Borrow.borrows.keySet());
 
         String key = getCompositeKey(library, id);
         resources.put(key, newResource);

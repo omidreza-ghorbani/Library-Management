@@ -18,6 +18,10 @@ public class Input {
             case "return" -> {Return.returnHandler(tokens[1]);yield true;}
             case "buy" -> {Buy.buyHandler(tokens[1]);yield true;}
             case "read" -> {ReadTreasure.readHandler(tokens[1]);yield true;}
+            case "add-comment" -> {Comment.addComment(tokens[1]); yield true;}
+            case "search" -> {Search.searchWord(tokens[1]);yield true;}
+            case "search-user" -> {Search.searchUser(tokens[1]);yield true;}
+
             default -> false;};
     }
 }

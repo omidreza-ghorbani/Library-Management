@@ -6,4 +6,5 @@ public class Book extends Resource {
         this.publisher = publisher;
         this.copy = copy;}
     public int getCopy() {return copy;}
+    public String getPublisher() {return publisher;}
 }
