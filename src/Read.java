@@ -1,7 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-
 class ReadTreasure {
     public static void readHandler(String data) {
         String[] details = data.split("\\|");
@@ -31,19 +30,19 @@ class ReadTreasure {
 
         User user = User.users.get(userId);
         Resource resource = Resource.resources.get(Resource.getCompositeKey(libraryId, resourceId));
-
-        if (!(resource instanceof TreasureTrove)) {
-            System.out.print(Main.NOT_ALLOWED);
-            return;
-        }
         if (!(user instanceof Professor)) {
-            System.out.print(Main.NOT_ALLOWED);
+            System.out.print(Main.PERMISSION);
             return;
         }
         if (user.getPenalized()) {
             System.out.print(Main.NOT_ALLOWED);
             return;
         }
+        if (!(resource instanceof TreasureTrove)) {
+            System.out.print(Main.NOT_ALLOWED);
+            return;
+        }
+
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime requestTime = LocalDateTime.parse(readDate + " " + readTime, formatter);
@@ -58,6 +57,7 @@ class ReadTreasure {
         TreasureLock.lock(resourceKey, requestTime);
         System.out.print(Main.SUCCESS);
     }
+
 }
 
 class TreasureLock {

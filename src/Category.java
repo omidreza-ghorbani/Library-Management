@@ -1,4 +1,4 @@
-public class Category {
+class Category {
     private final String adminName;
     private final String adminPassword;
     private final String id;

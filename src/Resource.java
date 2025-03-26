@@ -1,5 +1,5 @@
 import java.util.HashMap;
-public class Resource {
+class Resource {
     private final String id;
     private final String name;
     private final String author;
@@ -70,6 +70,7 @@ public class Resource {
                 newResource = new TreasureTrove(id, title, author, detail[5], datePublication, detail[7], category, library);
                 break;
         }
+        System.err.println("DEBUG borrows keys=" + Borrow.borrows.keySet());
 
         String key = getCompositeKey(library, id);
         resources.put(key, newResource);
@@ -89,24 +90,42 @@ public class Resource {
         String library = detail[3];
 
         if (!User.userExists(adminName)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
+            System.out.print(Main.NOT_FOUND);
+            return;
+        }
         if (!LibraryManager.libraries.containsKey(library)) {
-            System.out.print(Main.NOT_FOUND);return;}
+            System.out.print(Main.NOT_FOUND);
+            return;
+        }
         if (isNotManagerInLibrary(adminName, library)) {
-            System.out.print(Main.PERMISSION);return;}
+            System.out.print(Main.PERMISSION);
+            return;
+        }
         if (!(User.users.get(adminName) instanceof Manager)) {
-            System.out.print(Main.PERMISSION);return;}
-        if (!resourceExists(library,id)) {
-            System.out.print(Main.NOT_FOUND);return;}
+            System.out.print(Main.PERMISSION);
+            return;
+        }
+        if (!resourceExists(library, id)) {
+            System.out.print(Main.NOT_FOUND);
+            return;
+        }
         if (User.isInvalidPassword(adminName, adminPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
+            System.out.print(Main.INVALID_PASS);
+            return;
+        }
+
+        String resourceKey = getCompositeKey(library, id);
+        boolean isBorrowed = Borrow.borrows.keySet().stream()
+                .anyMatch(k -> k.endsWith("_" + resourceKey));
+        if (isBorrowed) {
+            System.out.print(Main.NOT_ALLOWED);
+            return;
+        }
 
         removeHelper(id, library);
         System.out.print(Main.SUCCESS);
     }
 
-    // متدی برای تولید کلید ترکیبی:
     public static String getCompositeKey(String libraryId, String bookId) {
         return libraryId + "_" + bookId;}
 
@@ -118,6 +137,8 @@ public class Resource {
     }
 
     static void removeHelper(String id, String library) {
-        resources.values().removeIf(resource -> resource.id.equals(id) && resource.library.equals(library));
+        String key = getCompositeKey(library, id);
+        resources.remove(key);
     }
+
 }

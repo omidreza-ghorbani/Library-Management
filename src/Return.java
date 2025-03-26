@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class Return {
+class Return {
     public static void returnHandler(String data) {
         String[] details = data.split("\\|");
         String userId = details[0];
@@ -81,5 +81,4 @@ public class Return {
         }
         return timeDifference ;
     }
-
 }

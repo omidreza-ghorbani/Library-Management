@@ -1,5 +1,6 @@
 import java.util.HashMap;
-abstract public class User {
+
+abstract class User {
     private final String id;
     private final String password;
     private final String firstName;
@@ -82,6 +83,12 @@ abstract public class User {
             System.out.print(Main.NOT_ALLOWED);
             return;
         }
+        String userKeyPrefix = id + "_";
+        boolean hasBorrowed = Borrow.borrows.keySet().stream()
+                .anyMatch(k -> k.startsWith(userKeyPrefix));
+        if (hasBorrowed) {
+            System.out.print(Main.NOT_ALLOWED);return;}
+
         users.remove(id);
         System.out.print(Main.SUCCESS);
     }

@@ -1,5 +1,5 @@
 import java.util.HashMap;
-public class Borrow {
+class Borrow {
     final static HashMap<String, String> borrows = new HashMap<>();
 
     public static void borrow_handler(String data) {
@@ -34,8 +34,7 @@ public class Borrow {
         if (res instanceof Book book){
             int totalCopies = book.getCopy();
             long currentlyBorrowed = borrows.keySet().stream()
-                    .filter(k -> k.startsWith(resourceKey + "_"))
-                    .count();
+                    .filter(k -> k.endsWith("_" + resourceKey))                    .count();
             if (currentlyBorrowed >= totalCopies) {
                 System.out.print(Main.NOT_ALLOWED);
                 return;
@@ -50,8 +49,7 @@ public class Borrow {
         if (res instanceof BookForSale bookForSale){
             int totalCopies = bookForSale.getCopy();
             long currentlyBorrowed = borrows.keySet().stream()
-                    .filter(k -> k.startsWith(resourceKey + "_"))
-                    .count();
+                    .filter(k -> k.endsWith("_" + resourceKey))                    .count();
             if (currentlyBorrowed >= totalCopies) {
                 System.out.print(Main.NOT_ALLOWED);
                 return;
@@ -74,7 +72,6 @@ public class Borrow {
             }
         }
 
-        //  همین کاربر قبلاً همین منبع را قرض نگرفته باشد
         if (borrows.containsKey(borrowKey)) {
             System.out.print(Main.NOT_ALLOWED);
             return;
