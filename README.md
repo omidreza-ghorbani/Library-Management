@@ -49,7 +49,5 @@ The system uses a command-line interface where you can enter various text-based 
 
 ## Project Documentation
 
-For more in-depth information on the system design, command specifications, and additional usage details, please refer to the project documentation file provided with this repository:
-
 - [Project Documentation (PDF) (in Persian)](./Library.pdf)
 
