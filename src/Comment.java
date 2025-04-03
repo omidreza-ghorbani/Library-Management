@@ -13,22 +13,28 @@ class Comment {
         User user = User.users.get(userId);
 
         if (!User.userExists(userId)) {
-            System.out.print(Main.NOT_FOUND); return;}
-
-        if (!LibraryManager.libraries.containsKey(libraryId) ) {
-            System.out.print(Main.NOT_FOUND); return;}
-
-         if (!Resource.resourceExists(libraryId, resourceId)) {
-            System.out.print(Main.NOT_FOUND); return;}
-
+            System.out.print(ResponseMessage.NOT_FOUND);
+            return;
+        }
+        if (!Library.libraries.contains(libraryId)) {
+            System.out.print(ResponseMessage.NOT_FOUND);
+            return;
+        }
+        if (!Resource.resourceExists(libraryId, resourceId)) {
+            System.out.print(ResponseMessage.NOT_FOUND);
+            return;
+        }
         if ((user instanceof Manager || user instanceof Staff)) {
-            System.out.print(Main.PERMISSION); return;}
-
+            System.out.print(ResponseMessage.PERMISSION);
+            return;
+        }
         if (User.isInvalidPassword(userId, userPassword)) {
-            System.out.print(Main.INVALID_PASS); return;}
+            System.out.print(ResponseMessage.INVALID_PASS);
+            return;
+        }
 
         String resourceKey = Resource.getCompositeKey(libraryId, resourceId);
         comments.put(resourceKey, commentText);
-        System.out.print(Main.SUCCESS);
+        System.out.print(ResponseMessage.SUCCESS);
     }
 }

@@ -1,18 +1,32 @@
 class BookForSale extends Resource {
-    private String publisher;
+    private final String publisher;
     private int copy;
-    private String Price;
-    private String discountRate;
-    public BookForSale(String id, String name, String author, String publisher, String datePublication,
-                       int copy, String price, String discountRate, String category, String library) {
-        super(id, name, author, datePublication, category, library);
+    private final long price;
+    private final int discountPercentage;
+    private long finalPrice;
+
+    public BookForSale(String id, String name, String author, String publisher, int copy, String category, String library, long price, int discountPercentage) {
+        super(id, name, author, category, library);
         this.publisher = publisher;
         this.copy = copy;
-        Price = price;
-        this.discountRate = discountRate;}
-    public String getPublisher(){return publisher;}
-    public int getCopy() {return copy;}
+        this.price = price;
+        this.discountPercentage = discountPercentage;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public int getCopy() {
+        return copy;
+    }
+
     public void setCopy(int newCopy) {
         this.copy = newCopy;
+    }
+
+    public long getFinalPrice() {
+        finalPrice = price - (price * discountPercentage) / 100;
+        return finalPrice;
     }
 }

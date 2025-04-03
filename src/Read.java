@@ -1,48 +1,49 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+
 class ReadTreasure {
+
     public static void readHandler(String data) {
         String[] details = data.split("\\|");
         String userId = details[0];
         String userPassword = details[1];
         String libraryId = details[2];
         String resourceId = details[3];
-        String readDate = details[4]; // قالب: yyyy-MM-dd
-        String readTime = details[5]; // قالب: HH:mm
+        String readDate = details[4];
+        String readTime = details[5];
 
         if (!User.userExists(userId)) {
-            System.out.print(Main.NOT_FOUND);
+            System.out.print(ResponseMessage.NOT_FOUND);
             return;
         }
-        if (!LibraryManager.libraries.containsKey(libraryId)) {
-            System.out.print(Main.NOT_FOUND);
+        if (!Library.libraries.contains(libraryId)) {
+            System.out.print(ResponseMessage.NOT_FOUND);
             return;
         }
         if (!Resource.resourceExists(libraryId, resourceId)) {
-            System.out.print(Main.NOT_FOUND);
+            System.out.print(ResponseMessage.NOT_FOUND);
             return;
         }
         if (User.isInvalidPassword(userId, userPassword)) {
-            System.out.print(Main.INVALID_PASS);
+            System.out.print(ResponseMessage.INVALID_PASS);
             return;
         }
 
         User user = User.users.get(userId);
         Resource resource = Resource.resources.get(Resource.getCompositeKey(libraryId, resourceId));
         if (!(user instanceof Professor)) {
-            System.out.print(Main.PERMISSION);
+            System.out.print(ResponseMessage.PERMISSION);
             return;
         }
         if (user.getPenalized()) {
-            System.out.print(Main.NOT_ALLOWED);
+            System.out.print(ResponseMessage.NOT_ALLOWED);
             return;
         }
         if (!(resource instanceof TreasureTrove)) {
-            System.out.print(Main.NOT_ALLOWED);
+            System.out.print(ResponseMessage.NOT_ALLOWED);
             return;
         }
-
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime requestTime = LocalDateTime.parse(readDate + " " + readTime, formatter);
@@ -50,12 +51,12 @@ class ReadTreasure {
         String resourceKey = Resource.getCompositeKey(libraryId, resourceId);
 
         if (TreasureLock.isLocked(resourceKey, requestTime)) {
-            System.out.print(Main.NOT_ALLOWED);
+            System.out.print(ResponseMessage.NOT_ALLOWED);
             return;
         }
 
         TreasureLock.lock(resourceKey, requestTime);
-        System.out.print(Main.SUCCESS);
+        System.out.print(ResponseMessage.SUCCESS);
     }
 
 }
@@ -68,13 +69,7 @@ class TreasureLock {
     }
 
     public static boolean isLocked(String resourceKey, LocalDateTime requestTime) {
-        if (!lockMap.containsKey(resourceKey)) {
-            return false;
-        }
         LocalDateTime unlockTime = lockMap.get(resourceKey);
-        if (requestTime.isBefore(unlockTime)) {
-            return true;
-        }
-        return false;
+        return lockMap.containsKey(resourceKey) && requestTime.isBefore(unlockTime);
     }
 }

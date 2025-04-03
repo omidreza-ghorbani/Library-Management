@@ -7,36 +7,54 @@ class Buy {
         String resourceId = details[3];
 
         if (!User.userExists(userId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
-        if (!LibraryManager.libraries.containsKey(libraryId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
+            System.out.print(ResponseMessage.NOT_FOUND);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
+        if (!Library.libraries.contains(libraryId)) {
+            System.out.print(ResponseMessage.NOT_FOUND);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
         if (!Resource.resourceExists(libraryId, resourceId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
+            System.out.print(ResponseMessage.NOT_FOUND);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
         if (User.isInvalidPassword(userId, userPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
+            System.out.print(ResponseMessage.INVALID_PASS);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
 
         User user = User.users.get(userId);
         Resource resource = Resource.resources.get(Resource.getCompositeKey(libraryId, resourceId));
-
         if (user instanceof Manager) {
-            System.out.print(Main.PERMISSION);return;}
-
-        if (!(resource instanceof BookForSale)) {
-            System.out.print(Main.NOT_ALLOWED);return;}
-
+            System.out.print(ResponseMessage.PERMISSION);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
+        if (!(resource instanceof BookForSale bookForSale)) {
+            System.out.print(ResponseMessage.NOT_ALLOWED);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
         if (user.getPenalized()) {
-            System.out.print(Main.NOT_ALLOWED);return;}
+            System.out.print(ResponseMessage.NOT_ALLOWED);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
 
-        BookForSale bookForSale = (BookForSale) resource;
         int currentCopy = bookForSale.getCopy();
         if (currentCopy <= 0) {
-            System.out.print(Main.NOT_ALLOWED);return;}
-
+            System.out.print(ResponseMessage.NOT_ALLOWED);
+            LogEntry.addLogEntry(data, "buy", "failed", "none");
+            return;
+        }
         int newCopy = currentCopy - 1;
         bookForSale.setCopy(newCopy);
-        System.out.print(Main.SUCCESS);
+        long finalPrice = bookForSale.getFinalPrice();
+        System.out.print(ResponseMessage.SUCCESS);
+        LogEntry.addLogEntry(data, "buy", "success", String.valueOf(finalPrice));
     }
 }

@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-public class Search {
+
+class Search {
+
     public static void searchWord(String keyword) {
         List<String> foundResources = new ArrayList<>();
 
@@ -9,27 +11,27 @@ public class Search {
         boolean found;
         for (Resource resource : Resource.resources.values()) {
             found = false;
-            if (resource instanceof Thesis thesis){
+            if (resource instanceof Thesis thesis) {
                 String advisor = thesis.getAdvisor().toLowerCase();
-                if(advisor.contains(lowerKeyword)){
+                if (advisor.contains(lowerKeyword)) {
                     found = true;
                 }
             }
-            if (resource instanceof Book book){
+            if (resource instanceof Book book) {
                 String publisher = book.getPublisher().toLowerCase();
-                if(publisher.contains(lowerKeyword)){
+                if (publisher.contains(lowerKeyword)) {
                     found = true;
                 }
             }
-            if (resource instanceof BookForSale bookForSale){
+            if (resource instanceof BookForSale bookForSale) {
                 String publisher = bookForSale.getPublisher().toLowerCase();
-                if(publisher.contains(lowerKeyword)){
+                if (publisher.contains(lowerKeyword)) {
                     found = true;
                 }
             }
-            if (resource instanceof TreasureTrove treasureTrove){
+            if (resource instanceof TreasureTrove treasureTrove) {
                 String publisher = treasureTrove.getPublisher().toLowerCase();
-                if(publisher.contains(lowerKeyword)){
+                if (publisher.contains(lowerKeyword)) {
                     found = true;
                 }
             }
@@ -41,7 +43,9 @@ public class Search {
         }
 
         if (foundResources.isEmpty()) {
-            System.out.print(Main.NOT_FOUND);return;}
+            System.out.print(ResponseMessage.NOT_FOUND);
+            return;
+        }
 
         foundResources.sort(String::compareTo);
         for (int i = 0; i < foundResources.size(); i++) {
@@ -51,7 +55,6 @@ public class Search {
             }
         }
         System.out.println();
-
     }
 
     public static void searchUser(String token) {
@@ -61,17 +64,21 @@ public class Search {
         String keyword = data[2].toLowerCase();
 
         if (!User.userExists(userId)) {
-            System.out.print(Main.NOT_FOUND);return;}
-
+            System.out.print(ResponseMessage.NOT_FOUND);
+            return;
+        }
         if (User.isInvalidPassword(userId, userPassword)) {
-            System.out.print(Main.INVALID_PASS);return;}
+            System.out.print(ResponseMessage.INVALID_PASS);
+            return;
+        }
 
         User currentUser = User.users.get(userId);
         if (currentUser instanceof Student) {
-            System.out.print(Main.PERMISSION);return;}
+            System.out.print(ResponseMessage.PERMISSION);
+            return;
+        }
 
         List<User> foundUsers = new ArrayList<>();
-
         for (User user : User.users.values()) {
             String fullName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
             if (fullName.contains(keyword)) {
@@ -80,11 +87,11 @@ public class Search {
         }
 
         if (foundUsers.isEmpty()) {
-            System.out.print(Main.NOT_FOUND);return;}
+            System.out.print(ResponseMessage.NOT_FOUND);
+            return;
+        }
 
         foundUsers.sort(Comparator.comparing(User::getId));
-
-
         for (int i = 0; i < foundUsers.size(); i++) {
             System.out.print(foundUsers.get(i).getId());
             if (i != foundUsers.size() - 1) {
