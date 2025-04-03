@@ -40,3 +40,22 @@ The system uses a command-line interface where you can enter various text-based 
 - **Add Library:**
   ```bash
   add-library#admin|AdminPass|library1
+  
+- **Add Category:**
+    ```bash
+  add-category#admin|AdminPass|category1|ignored|null
+    
+- **Add Student:**
+    ```bash
+    add-student#admin|AdminPass|student1|password|FirstName|LastName
+
+- **Borrow:**
+    ```bash
+    borrow#student1|password|library1|book1|2025-04-04|12:00
+
+## Project Documentation
+
+For more in-depth information on the system design, command specifications, and additional usage details, please refer to the project documentation file provided with this repository:
+
+- [Project Documentation (PDF) (in Persian)](./Library.pdf)
+
