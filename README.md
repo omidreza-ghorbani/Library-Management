@@ -27,12 +27,6 @@ The Library Management System is a Java-based application that allows you to man
 - Sales report for purchased resources.
 - Detailed logging of all major operations for audit and reporting purposes.
 
-## Installation and Setup
-
-### Prerequisites
-- **Java Development Kit (JDK):** Version 8 or higher.
-- **Terminal/Command Prompt:** For compiling and running the application.
-
 ## Usage
 
 The system uses a command-line interface where you can enter various text-based commands. Here are a few examples:
